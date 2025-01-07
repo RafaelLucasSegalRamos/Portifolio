@@ -11,7 +11,7 @@ body
     min-height: 100vh;
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: top;
     align-items: center;
     flex-direction: column;
     position: relative;
@@ -93,7 +93,7 @@ header nav ul li:active
     box-shadow: none;
 }
 
-header nav ul li a
+header nav ul a
 {
     text-decoration: none;
     color: #fff;
@@ -105,15 +105,15 @@ main
 {
     position: relative;
     width: 75vw;
-    min-height: 900px;
+    min-height: 700px;
     display: flex;
-    
     align-items: center;
     background-color: #ccc;
-
     flex-direction: column;
     text-align: justify;
     padding: 30px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
 main h1
@@ -139,6 +139,66 @@ main p
     color: #333;
     margin-bottom: 20px;
     text-indent: 16px;
+}
+
+main form
+{
+    display: flex;
+    background: rgba(255, 255, 255, 0.3);
+    width: 80%;
+    position: relative;
+    min-height: 400px;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+}
+
+main form label
+{
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #333;
+    margin: 20px 35px;
+}
+
+main form input[type="text"], main form input[type="email"], main form input[type="password"], main form input[type="number"], main form textarea
+{
+    width: 80%;
+    height: 40px;
+    padding: 0 15px;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    margin: 0 55px;
+}
+
+main form input[type="submit"]
+{
+    width: 50%;
+    height: 50px;
+    margin: 20px auto;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: rgb(109, 11, 201);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+main form input[type="submit"]:hover
+{
+    background-color: rgb(85, 8, 157);
+}
+
+main form input[type="submit"]:active
+{
+    background-color: rgb(65, 6, 120);
 }
 
 footer

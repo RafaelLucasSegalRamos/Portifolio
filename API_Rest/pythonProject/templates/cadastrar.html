@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina Inicial</title>
+    <!-- <link rel="stylesheet" href="static/CSS/style.css">  -->
+    <link rel="stylesheet" href="{{url_for('static', filename='CSS/style.css')}}">
+    <script>
+        function processar() {
+            const formData = new FormData(document.querySelector('form'));
+            fetch('/cadastrar/processar', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Erro: ' + data.error);
+                } else {
+                    alert(data.message);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="imgBox">
+            {{Marca}}
+        </div>
+        <nav>
+            <ul>
+                <a href="/"><li>Inicio</li></a>
+                <a href="/cadastrar"><li>Adcionar usuários</li></a>
+                <a href="#"><li>Lista de Usuários</li></a>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Cadastrar novos usuários</h1>
+        <form>
+            <label for="nome">Nome: </label>
+            <input type="text" name="nome" required>
+            <label for="email">Email: </label>
+            <input type="email" name="email" required>
+            <label for="senha">Senha: </label>
+            <input type="password" name="senha" required>
+            <label for="idade">Idade: </label>
+            <input type="number" name="idade" required>
+            <input type="submit" value="Cadastrar" onclick="processar()">
+
+        </form>
+    </main>
+    <footer>
+        <h4>Feito por Rafael</h4>
+    </footer>
+</body>
+</html>
