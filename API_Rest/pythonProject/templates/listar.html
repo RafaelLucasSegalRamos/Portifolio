@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina Inicial</title>
+    <link rel="stylesheet" href="static/CSS/style.css"> 
+    <!-- <link rel="stylesheet" href="{{url_for('static', filename='CSS/style.css')}}"> -->
+</head>
+<body>
+    <header>
+        <div class="imgBox">
+            {{Marca}}
+        </div>
+        <nav>
+            <ul>
+                <a href="/"><li>Inicio</li></a>
+                <a href="/cadastrar"><li>Adcionar Clientes</li></a>
+                <a href="/listar"><li>Lista de Clientes</li></a>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Lista de Clientes</h1>
+        
+
+            {{ con | listar | safe}}
+        
+    
+    </main>
+    <footer>
+        <h4>Feito por Rafael</h4>
+    </footer>
+</body>
+</html>

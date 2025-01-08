@@ -1,12 +1,19 @@
-from MySQLdb import connect
+from MySQLdb import connect # Biblioteca utilizada: mysql-connector-python
 from flask import Flask, jsonify, request, render_template
 from flask_pydantic_spec import FlaskPydanticSpec, Request, Response
 from pydantic import BaseModel, Field
 from typing import List, Optional
-# Biblioteca utilizada: mysql-connector-python
 from time import sleep
+import funcoes
 
-connection = connect(host="localhost", user="root", password="1234", database="bd_teste")
+con = {
+    "host": "localhost",
+    "user": "root",
+    "password": "1234",
+    "database": "bd_teste"
+}
+
+connection = connect(host=con["host"], user=con["user"], password=con["password"], database=con["database"])
 cursor = connection.cursor()
 cursor.execute(
     "create table if not exists usuarios (idUser int auto_increment primary key, Nome_usu varchar(50), email varchar(50), senha varchar(50), idade int default 0)")
@@ -15,6 +22,8 @@ app = Flask(__name__)
 spec = FlaskPydanticSpec("flask", title="Teste online")
 spec.register(app)
 
+app.jinja_env.filters['listar'] = funcoes.listar_Clientes
+app.jinja_env.filters['eval'] = eval
 
 class Pessoa(BaseModel):
     nome: str
@@ -27,9 +36,11 @@ class Pessoa(BaseModel):
 def homepage():
     return render_template('index.html', Marca="Rafael")
 
+
 @app.route('/cadastrar')
 def Cadastra_page():
     return render_template('cadastrar.html', Marca="Rafael")
+
 
 @app.route('/cadastrar/processar', methods=['POST'])
 def processar():
@@ -43,14 +54,19 @@ def processar():
 
         if not nome_usu or not email_usu or not senha_usu or not idade:
             return jsonify({'error': 'Dados incompletos'}), 400
-        nome_usu = nome_usu.strip().title().replace(' ', '_').replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace(".", "").replace("!", "").replace("?", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("@", "").replace("--", "")
-        email_usu = email_usu.strip().replace(' ', '_').replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace(".", "").replace("!", "").replace("?", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("--", "")
-        senha_usu = senha_usu.strip().replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace(".", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("--", "")
+        nome_usu = nome_usu.strip().title().replace(' ', '_').replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace("!", "").replace("?", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("@", "").replace("--", "")
+        email_usu = email_usu.strip().replace(' ', '_').replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace("!", "").replace("?", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("--", "")
+        senha_usu = senha_usu.strip().replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("--", "")
         cursor.execute(f"insert into usuarios (Nome_usu, email, senha, idade) values ('{nome_usu}', '{email_usu}', '{senha_usu}', '{request.form.get('idade')}')")
         connection.commit()
         return jsonify({'message': f'Nome: {nome_usu}, Email: {email_usu}, Senha: {senha_usu}, Idade: {request.form.get('idade')}'})
     except Exception as e:
         return jsonify({'error': str(e)})
+
+
+@app.route('/listar')
+def Listar_page():
+    return render_template('listar.html', Marca="Rafael", con=con)
 
 
 @app.get('/cadastro')  # Puxando os dados do banco de dados e colocando na API

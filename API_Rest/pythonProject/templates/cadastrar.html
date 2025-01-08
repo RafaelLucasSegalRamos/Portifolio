@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagina Inicial</title>
+    <title>Pagina de Cadastro</title>
     <!-- <link rel="stylesheet" href="static/CSS/style.css">  -->
     <link rel="stylesheet" href="{{url_for('static', filename='CSS/style.css')}}">
     <script>
@@ -32,13 +32,13 @@
         <nav>
             <ul>
                 <a href="/"><li>Inicio</li></a>
-                <a href="/cadastrar"><li>Adcionar usuários</li></a>
-                <a href="#"><li>Lista de Usuários</li></a>
+                <a href="/cadastrar"><li>Adcionar Clientes</li></a>
+                <a href="/listar"><li>Lista de Clientes</li></a>
             </ul>
         </nav>
     </header>
     <main>
-        <h1>Cadastrar novos usuários</h1>
+        <h1>Cadastrar novos Clientes</h1>
         <form>
             <label for="nome">Nome: </label>
             <input type="text" name="nome" required>
