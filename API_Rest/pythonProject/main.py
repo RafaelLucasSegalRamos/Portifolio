@@ -90,7 +90,7 @@ def Listar_page():
         cursor.execute(f'select * from usuarios where idUser = {busca}')
         tudo = cursor.fetchall()
         if not tudo:
-            return render_template('listar.html', Marca="Rafael", ret="ID não encontrado")
+            return render_template('listar.html', Marca="Rafael", ret=(("ID não encontrado", ""), ""))
         return render_template('listar.html', Marca="Rafael", ret=tudo)
     else:
         cursor.execute('select * from usuarios')
@@ -100,19 +100,7 @@ def Listar_page():
         return render_template('listar.html', Marca="Rafael", ret=tudo)
 
 
-@app.route('/listar/pesquisar', methods=['POST'])
-def pesquisar():
-    try:
-        id = request.form.get('busca')
-        if not id:
-            return jsonify({'error': 'ID não informado'}), 400
-        cursor.execute(f'select * from usuarios where idUser = {id}')
-        resultado = cursor.fetchall()
-        if not resultado:
-            return jsonify({'error': 'ID não encontrado'}), 404
-        return render_template('listar.html', Marca="Rafael", ret=resultado)
-    except Exception as e:
-        return jsonify({'error': str(e)})
+
 
 
 @app.get('/cadastro')  # Puxando os dados do banco de dados e colocando na API
