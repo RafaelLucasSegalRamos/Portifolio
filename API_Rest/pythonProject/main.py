@@ -1,4 +1,4 @@
-from MySQLdb import connect # Biblioteca utilizada: mysql-connector-python
+from MySQLdb import connect  # Biblioteca utilizada: mysql-connector-python
 from flask import Flask, jsonify, request, render_template
 from flask_pydantic_spec import FlaskPydanticSpec, Request, Response
 from pydantic import BaseModel, Field
@@ -24,6 +24,7 @@ spec.register(app)
 
 app.jinja_env.filters['listar'] = funcoes.listar_Clientes
 app.jinja_env.filters['eval'] = eval
+
 
 class Pessoa(BaseModel):
     nome: str
@@ -54,19 +55,64 @@ def processar():
 
         if not nome_usu or not email_usu or not senha_usu or not idade:
             return jsonify({'error': 'Dados incompletos'}), 400
-        nome_usu = nome_usu.strip().title().replace(' ', '_').replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace("!", "").replace("?", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("@", "").replace("--", "")
-        email_usu = email_usu.strip().replace(' ', '_').replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace("!", "").replace("?", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("--", "")
-        senha_usu = senha_usu.strip().replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("--", "")
-        cursor.execute(f"insert into usuarios (Nome_usu, email, senha, idade) values ('{nome_usu}', '{email_usu}', '{senha_usu}', '{request.form.get('idade')}')")
+        nome_usu = nome_usu.strip().title().replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace(
+            "!", "").replace("?", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+",
+                                                                                                                  "").replace(
+            "-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("@",
+                                                                                                                  "").replace(
+            "--", "")
+        email_usu = email_usu.strip().replace(' ', '_').replace("'", "").replace(")", "").replace("(", "").replace(",",
+                                                                                                                   "").replace(
+            "!", "").replace("?", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+",
+                                                                                                                  "").replace(
+            "-", "").replace("*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("--",
+                                                                                                                  "")
+        senha_usu = senha_usu.strip().replace("'", "").replace(")", "").replace("(", "").replace(",", "").replace(":",
+                                                                                                                  "").replace(
+            ";", "").replace("/", "").replace("=", "").replace("+", "").replace("-", "").replace("*", "").replace("&",
+                                                                                                                  "").replace(
+            "%", "").replace("$", "").replace("#", "").replace("--", "")
+        cursor.execute(
+            f"insert into usuarios (Nome_usu, email, senha, idade) values ('{nome_usu}', '{email_usu}', '{senha_usu}', '{request.form.get('idade')}')")
         connection.commit()
-        return jsonify({'message': f'Nome: {nome_usu}, Email: {email_usu}, Senha: {senha_usu}, Idade: {request.form.get('idade')}'})
+        return jsonify({
+                           'message': f'Nome: {nome_usu}, Email: {email_usu}, Senha: {senha_usu}, Idade: {request.form.get('idade')}'})
     except Exception as e:
         return jsonify({'error': str(e)})
 
 
-@app.route('/listar')
+@app.route('/listar', methods=['POST', 'GET'])
 def Listar_page():
-    return render_template('listar.html', Marca="Rafael", con=con)
+    connection = connect(host=con["host"], user=con["user"], password=con["password"], database=con["database"])
+    cursor = connection.cursor()
+    busca = request.form.get('busca')
+    if busca:
+        cursor.execute(f'select * from usuarios where idUser = {busca}')
+        tudo = cursor.fetchall()
+        if not tudo:
+            return render_template('listar.html', Marca="Rafael", ret="ID não encontrado")
+        return render_template('listar.html', Marca="Rafael", ret=tudo)
+    else:
+        cursor.execute('select * from usuarios')
+        tudo = cursor.fetchall()
+        if not tudo:
+            return render_template('listar.html', Marca="Rafael", ret="Nenhum usuário cadastrado")
+        return render_template('listar.html', Marca="Rafael", ret=tudo)
+
+
+@app.route('/listar/pesquisar', methods=['POST'])
+def pesquisar():
+    try:
+        id = request.form.get('busca')
+        if not id:
+            return jsonify({'error': 'ID não informado'}), 400
+        cursor.execute(f'select * from usuarios where idUser = {id}')
+        resultado = cursor.fetchall()
+        if not resultado:
+            return jsonify({'error': 'ID não encontrado'}), 404
+        return render_template('listar.html', Marca="Rafael", ret=resultado)
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 
 @app.get('/cadastro')  # Puxando os dados do banco de dados e colocando na API
@@ -105,7 +151,8 @@ def post_usu():
         ".", "").replace(":", "").replace(";", "").replace("/", "").replace("=", "").replace("+", "").replace("-",
                                                                                                               "").replace(
         "*", "").replace("&", "").replace("%", "").replace("$", "").replace("#", "").replace("--", "")
-    cursor.execute(f"insert into usuarios (Nome_usu, email, senha) values ('{nome_usu}', '{email_usu}', '{senha_usu}', '{body['idade']}')")
+    cursor.execute(
+        f"insert into usuarios (Nome_usu, email, senha) values ('{nome_usu}', '{email_usu}', '{senha_usu}', '{body['idade']}')")
     connection.commit()
     return jsonify(body)
 
@@ -154,7 +201,6 @@ def procura_id(id: int):
 @app.delete('/cadastro/<int:id>')  # Deletando dados no banco de dados e na API via ID
 @spec.validate(resp=Response())
 def deleta_id(id: int):
-
     cursor.execute(f'select * from usuarios where idUser = {id}')
     resultado = cursor.fetchall()[0]
     cursor.execute(f'delete from usuarios where idUser = {id}')

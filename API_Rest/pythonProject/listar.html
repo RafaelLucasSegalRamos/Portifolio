@@ -9,7 +9,7 @@
      <script>
     function pesquisar() {
         const formData = new FormData(document.querySelector('form'));
-        fetch('/listar', {
+        fetch('/listar/pesquisar', {
             method: 'POST',
             body: formData
         })
@@ -38,12 +38,14 @@
         </nav>
     </header>
     <main>
-        <form class="line" action="/listar" method="POST">
+        <form class="line">
             <h1>Lista de Clientes</h1>
             <input type="text" name="busca" id="busca" placeholder="Buscar Cliente por id">
             <button type="submit" onclick="pesquisar()"><i class="fa-solid fa-magnifying-glass"></i></button>
-        </form  >
-        
+        </form>
+        <iframe src="" frameborder="0">
+            
+        </iframe>
 
             {{ ret | listar | safe}}
         
