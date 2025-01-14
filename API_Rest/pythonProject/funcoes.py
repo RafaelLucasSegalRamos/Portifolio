@@ -9,11 +9,15 @@ def listar_Clientes(ret):
                 <th>Email</th>\n
                 <th>Senha</th>\n
                 <th>Idade</th>\n
+                <th>  </th>\n
             </tr>\n'''
-    for i in ret:
+    for pos, i in enumerate(ret):
         texto += '<tr>\n'
         for pos, j in enumerate(i):
             texto += f'<td>{j}</td> \n'
+            if pos == 0:
+                id = j
+        texto += f'<td><a href="/listar"><button onclick="deletar({id});">Deletar</button></a></td>\n'
         texto += '</tr>\n'
     texto += "</table>"
     return texto

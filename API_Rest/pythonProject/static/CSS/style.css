@@ -265,6 +265,31 @@ main table tr td
     border-top: 1px solid #333;
 }
 
+main table tr td a
+{
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    text-decoration: none;
+    color: rgb(109, 11, 201);
+    font-size: 1.2rem;
+    font-weight: 900;
+    background: none;
+}
+
+main table tr td a button
+{
+    display: inline;
+    font-size: 1.2rem;
+    font-weight: 600; 
+    color: rgb(109, 11, 201);
+    border: none;
+    cursor: pointer;
+    background: none;
+    /* transition: background-color 0.3s ease; */
+}
+
 footer
 {
     position: fixed;

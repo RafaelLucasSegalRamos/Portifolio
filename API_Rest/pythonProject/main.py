@@ -13,6 +13,22 @@ con = {
     "database": "bd_teste"
 }
 
+
+def get_db_connection():
+    try:
+        conn = connect(
+            host='localhost',  # substitua pelo seu host
+            user='root',  # substitua pelo seu usuário
+            password='1234',  # substitua pela sua senha
+            database='bd_teste'  # substitua pelo seu banco de dados
+        )
+        if conn.is_connected():
+            return conn
+    except Exception as e:
+        print(f"Erro ao conectar ao MySQL: {e}")
+        return None
+
+
 connection = connect(host=con["host"], user=con["user"], password=con["password"], database=con["database"])
 cursor = connection.cursor()
 cursor.execute(
@@ -23,7 +39,6 @@ spec = FlaskPydanticSpec("flask", title="Teste online")
 spec.register(app)
 
 app.jinja_env.filters['listar'] = funcoes.listar_Clientes
-app.jinja_env.filters['eval'] = eval
 
 
 class Pessoa(BaseModel):
@@ -76,7 +91,7 @@ def processar():
             f"insert into usuarios (Nome_usu, email, senha, idade) values ('{nome_usu}', '{email_usu}', '{senha_usu}', '{request.form.get('idade')}')")
         connection.commit()
         return jsonify({
-                           'message': f'Nome: {nome_usu}, Email: {email_usu}, Senha: {senha_usu}, Idade: {request.form.get('idade')}'})
+            'message': f'Nome: {nome_usu}, Email: {email_usu}, Senha: {senha_usu}, Idade: {request.form.get('idade')}'})
     except Exception as e:
         return jsonify({'error': str(e)})
 
@@ -89,6 +104,7 @@ def Listar_page():
     if busca:
         cursor.execute(f'select * from usuarios where idUser = {busca}')
         tudo = cursor.fetchall()
+
         if not tudo:
             return render_template('listar.html', Marca="Rafael", ret=(("ID não encontrado", ""), ""))
         return render_template('listar.html', Marca="Rafael", ret=tudo)
@@ -100,7 +116,14 @@ def Listar_page():
         return render_template('listar.html', Marca="Rafael", ret=tudo)
 
 
+@app.route('/listar/deletar', methods=['POST'])
+def deletar():
+    id = int(request.form.get('num'))
+    n_cursor = connection.cursor()
+    n_cursor.execute('DELETE FROM usuarios WHERE idUser = %s', (id,))
+    connection.commit()
 
+    return render_template('reload.html')
 
 
 @app.get('/cadastro')  # Puxando os dados do banco de dados e colocando na API

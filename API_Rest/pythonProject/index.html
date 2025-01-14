@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina Inicial</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='CSS/style.css')}}">
+
+</head>
+<body>
+    <header>
+        <div class="imgBox">
+            {{Marca}}
+        </div>
+        <nav>
+            <ul>
+                <a href="/"><li>Inicio</li></a>
+                <a href="/cadastrar"><li>Adcionar Clientes</li></a>
+                <a href="/listar"><li>Lista de Clientes</li></a>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        
+        <h1>Bem vindo ao {{Marca}}!</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto at aliquam explicabo consequuntur molestias neque illum libero optio assumenda doloribus, corrupti, quae mollitia totam sit laboriosam porro. Repudiandae, fugiat illum.
+        </p>    
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto at aliquam explicabo consequuntur molestias neque illum libero optio assumenda doloribus, corrupti, quae mollitia totam sit laboriosam porro. Repudiandae, fugiat illum.
+        </p>
+        <h2>Sobre a API</h2>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus cupiditate quia consectetur totam dolor quibusdam sequi asperiores? Cupiditate officia, atque, voluptatum incidunt maxime dolorem doloribus ea, deserunt magnam soluta laborum.
+        </p>
+        <p>
+            Para acessar nossa API, basta acessar o link abaixo:
+            <a href="/cadastro">API_cadastro</a>
+        </p>
+    </main>
+    <footer>
+        <h4>Feito por Rafael</h4>
+    </footer>
+</body>
+</html>
