@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Usuário</title>
+</head>
+<body>
+    <h1>Alterar Usuário</h1>
+    <form action="/listar/alterar/alt" method="post">
+        <input type="hidden" name="id" value="{{ id }}">
+        <label for="nome">Nome:</label>
+        <input type="text" name="nome" value="{{ nome }}">
+        <label for="email">Email:</label>
+        <input type="email" name="email" value="{{ email }}">
+        <label for="senha">Senha:</label>
+        <input type="password" name="senha" value="{{ senha }}">
+        <label for="idade">Idade:</label>
+        <input type="number" name="idade" value="{{ idade }}">
+        <button type="submit">Salvar Alterações</button>
+    </form>
+</body>
+</html>

@@ -1,5 +1,5 @@
 from MySQLdb import connect  # Biblioteca utilizada: mysql-connector-python
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, redirect, url_for
 from flask_pydantic_spec import FlaskPydanticSpec, Request, Response
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -122,8 +122,47 @@ def deletar():
     n_cursor = connection.cursor()
     n_cursor.execute('DELETE FROM usuarios WHERE idUser = %s', (id,))
     connection.commit()
+    cursor.execute(f'select * from usuarios')
+    tudo = cursor.fetchall()
+    return render_template('listar.html', Marca="Rafael", ret=tudo)
 
-    return render_template('reload.html')
+
+@app.route('/listar/alterar', methods=['POST'])
+def alterar():
+    id = int(request.form.get('num'))
+    cursor.execute(f'select * from usuarios where idUser = {id}')
+    tudo = cursor.fetchall()
+    
+    if not tudo:
+        return render_template('listar.html', Marca="Rafael", ret=(("ID não encontrado", ""), ""))
+    nome = tudo[0][1]
+    email = tudo[0][2]
+    senha = tudo[0][3]
+    idade = tudo[0][4]
+
+    return redirect(url_for('alterar_page', id=id, nome=nome, email=email, senha=senha, idade=idade))
+
+
+@app.route('/listar/alterar_page')
+def alterar_page():
+    id = request.args.get('id')
+    nome = request.args.get('nome')
+    email = request.args.get('email')
+    senha = request.args.get('senha')
+    idade = request.args.get('idade')
+    return render_template('alterar.html', Marca="Rafael", id=id, nome=nome, email=email, senha=senha, idade=idade)
+
+
+@app.route('/listar/alterar_page/alt', methods=['POST'])
+def alt():
+    id = request.form.get('id')
+    nome = request.form.get('nome')
+    email = request.form.get('email')
+    senha = request.form.get('senha')
+    idade = request.form.get('idade')
+    cursor.execute('UPDATE usuarios SET Nome_usu = %s, email = %s, senha = %s, idade = %s WHERE idUser = %s', (nome, email, senha, idade, id))
+    connection.commit()
+    return render_template('listar.html', Marca="Rafael", ret=tudo)
 
 
 @app.get('/cadastro')  # Puxando os dados do banco de dados e colocando na API

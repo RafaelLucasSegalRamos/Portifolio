@@ -37,6 +37,31 @@
                 alert(data.message);
             }
         });
+        reload();
+    }
+    function alterar(num) {
+        const formData = new FormData();
+        formData.append('num', num);
+        fetch('/listar/alterar', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Erro: ' + data.error);
+            } else {
+                alert(data.message);
+            }
+        });
+        header('Location: /listar/alterar');
+        
+    }
+    function reload() {
+        
+        setTimeout(function() {
+            window.location.reload();
+        }, 10);
     }
 </script>
 </head>
@@ -57,7 +82,7 @@
         <form class="line pesquisa" action="/listar" method="POST">
             <h1>Lista de Clientes</h1>
             <input type="text" name="busca" id="busca" placeholder="Buscar Cliente por id">
-            <button type="submit" onclick="pesquisar()"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button type="submit" onclick="pesquisar();" onclick="reload();"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form  >
         
 
